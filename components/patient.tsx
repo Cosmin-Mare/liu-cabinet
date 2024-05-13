@@ -1,11 +1,11 @@
+import { redirect } from "next/navigation";
 import { useRef } from "react";
-import Field from "./field";
 
 export interface Patient {
   id: string;
   name: string;
   phone: string;
-  email: string;
+  email?: string;
   details?: string;
 }
 
@@ -31,22 +31,40 @@ export default function PatientComp(props: PatientProps) {
     }
   }
   return (
-    <a href={`/pacient/${props.id}`}>
+    <div>
       <div>
-        <Field value={props.name} type="name" id={props.id} />
-        <Field value={props.phone} type="phone" id={props.id} />
-        <Field value={props.email} type="email" id={props.id} />
-        <Field
-          value={props.details ?? "Niciun detaliu"}
-          type="details"
-          id={props.id}
-        />
+        <div>
+          <p>Nume: </p>
+          <p>{props.name}</p>
+        </div>
+        <div>
+          <p>Telefon: </p>
+          <p>{props.phone}</p>
+        </div>
+        <div>
+          <p>Email: </p>
+          <p>{props.email ?? ""}</p>
+        </div>
+        <div>
+          <p>Detalii: </p>
+          <p>{props.details ?? "Niciun detaliu"}</p>
+        </div>
+      </div>
+      <div>
+        <button
+          className="button"
+          onClick={() => {
+            redirect(`/pacienti/${props.id}`);
+          }}
+        >
+          Edit
+        </button>
       </div>
       <div>
         <button className="button" onClick={handleDelete} ref={deleteButtonRef}>
           Delete
         </button>
       </div>
-    </a>
+    </div>
   );
 }

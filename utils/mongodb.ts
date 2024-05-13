@@ -1,6 +1,7 @@
+import { Appointment } from "@/components/appointment";
 import { PatientProps } from "@/components/patient";
 import * as dotenv from "dotenv";
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectId, PullOperator } from "mongodb";
 dotenv.config();
 const URI = process.env.DB_URI;
 const DB_NAME = process.env.DB_NAME;
@@ -37,7 +38,7 @@ export async function updatePatient(data: PatientProps) {
     .updateOne({ _id: new ObjectId(data.id) }, { $set: data });
 }
 
-export async function updateField(data: {
+export async function updatePatientField(data: {
   id: string;
   field: string;
   value: string;
@@ -47,5 +48,39 @@ export async function updateField(data: {
     .updateOne(
       { _id: new ObjectId(data.id) },
       { $set: { [data.field]: data.value } }
+    );
+}
+
+export async function updateAppointmentField(data: {
+  patientId: string;
+  appointmentId: string;
+  field: string;
+  value: string;
+}) {
+  await db.collection("patients").updateOne(
+    {
+      _id: new ObjectId(data.patientId),
+      "appointments.id": data.appointmentId,
+    },
+    { $set: { [`appointments.$.${data.field}`]: data.value } }
+  );
+}
+export async function deleteAppointment(
+  patientId: string,
+  appointmentId: string
+) {
+  await db
+    .collection("patients")
+    .updateOne(
+      { _id: new ObjectId(patientId) },
+      { $pull: { appointments: { id: appointmentId } } as any }
+    );
+}
+export async function addAppointment(patientId: string, data: Appointment) {
+  await db
+    .collection("patients")
+    .updateOne(
+      { _id: new ObjectId(patientId) },
+      { $push: { appointments: data } as any }
     );
 }

@@ -1,5 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { updatePatient } from "@/utils/mongodb";
+import {
+  updatePatientField,
+  updatePatient,
+  updateAppointmentField,
+} from "@/utils/mongodb";
 import { Patient } from "@/components/patient";
 
 type ResponseData = {
@@ -16,7 +20,7 @@ export default async function handler(
     return;
   }
   try {
-    await updatePatient(req.body);
+    await updateAppointmentField(req.body);
     res.status(200).json({ message: "Patient updated" });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
