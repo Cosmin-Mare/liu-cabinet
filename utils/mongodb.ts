@@ -36,3 +36,16 @@ export async function updatePatient(data: PatientProps) {
     .collection("patients")
     .updateOne({ _id: new ObjectId(data.id) }, { $set: data });
 }
+
+export async function updateField(data: {
+  id: string;
+  field: string;
+  value: string;
+}) {
+  await db
+    .collection("patients")
+    .updateOne(
+      { _id: new ObjectId(data.id) },
+      { $set: { [data.field]: data.value } }
+    );
+}

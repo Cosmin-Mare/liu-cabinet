@@ -1,18 +1,18 @@
+import { useRef } from "react";
+
 export interface FieldProps {
-  field: string;
+  value: string;
   type: string;
+  id: string;
 }
 
 export default function Field(props: FieldProps) {
+  const editButtonRef = useRef<HTMLButtonElement>(null);
+
   return (
     <div>
-      <p className="field-name">{props.field}</p>
-      <button className="button" onClick={() => {}}>
-        <img src="edit.svg"></img>
-      </button>
-      <button className="button" onClick={() => {}}>
-        <img src="delete.svg"></img>
-      </button>
+      <p className="field-name">{props.type}:</p>
+      <p className="field-value">{props.value}</p>
     </div>
   );
 }
