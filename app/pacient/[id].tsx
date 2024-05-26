@@ -3,6 +3,7 @@ import { Patient } from "@/components/patient";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import AppointmentComp from "@/components/appointment";
 
 export default function Page() {
   const router = useRouter();
@@ -62,7 +63,21 @@ export default function Page() {
               Șterge
             </button>
           </div>
-          <div></div>
+          <div>
+            {patient.appointments
+              ?.filter((appointment) => {
+                return appointment.date > new Date();
+              })
+              .map((appointment) => {
+                return (
+                  <AppointmentComp
+                    id={appointment.id}
+                    date={appointment.date}
+                    details={appointment.details}
+                  />
+                );
+              })}
+          </div>
         </div>
       )}
     </main>

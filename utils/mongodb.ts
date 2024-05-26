@@ -1,13 +1,15 @@
 import { Appointment } from "@/components/appointment";
-import { PatientProps } from "@/components/patient";
+import { Patient } from "@/components/patient";
 import * as dotenv from "dotenv";
-import { MongoClient, ObjectId, PullOperator } from "mongodb";
+import { InsertOneResult, MongoClient, ObjectId, PullOperator } from "mongodb";
 dotenv.config();
-const URI = process.env.DB_URI;
+const URI = process.env.DB_CONN_STRING;
 const DB_NAME = process.env.DB_NAME;
+console.log(URI);
+console.log(DB_NAME);
 if (!URI || !DB_NAME) {
   throw new Error(
-    "Please define the DB_URI and DB_NAME environment variables inside .env"
+    "Please define the DB_CONNECTION_STRING and DB_NAME environment variables inside .env"
   );
 }
 
@@ -19,12 +21,18 @@ export async function getPatients() {
   return patients;
 }
 
-export async function addPatient(data: PatientProps) {
-  await db.collection("patients").insertOne(data);
+export async function addPatient(data: Patient): Promise<any> {
+  try {
+    console.log(data);
+    return db.collection("patients").insertOne(data);
+  } catch (err) {
+    console.log("ERROR");
+    return undefined;
+  }
 }
 
-export async function deletePatient(id: string) {
-  await db.collection("patients").deleteOne({ _id: new ObjectId(id) });
+export async function deletePatient(id: string): Promise<any> {
+  return await db.collection("patients").deleteOne({ _id: new ObjectId(id) });
 }
 
 export async function getPatient(id: string) {
@@ -32,18 +40,12 @@ export async function getPatient(id: string) {
   return patient;
 }
 
-export async function updatePatient(data: PatientProps) {
-  await db
-    .collection("patients")
-    .updateOne({ _id: new ObjectId(data.id) }, { $set: data });
-}
-
 export async function updatePatientField(data: {
   id: string;
   field: string;
   value: string;
-}) {
-  await db
+}): Promise<any> {
+  return await db
     .collection("patients")
     .updateOne(
       { _id: new ObjectId(data.id) },

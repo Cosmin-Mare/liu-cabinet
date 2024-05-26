@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { useRef } from "react";
+import { Appointment } from "./appointment";
 
 export interface Patient {
   id: string;
@@ -7,6 +8,7 @@ export interface Patient {
   phone: string;
   email?: string;
   details?: string;
+  appointments?: Appointment[];
 }
 
 interface PatientProps extends Patient {
